@@ -98,12 +98,21 @@ class SiswaController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function edit(siswa $siswa)
+    public function edit($siswa)
     {
-        $siswa->nomor_telepon = $siswa->telepon->nomor_telepon;
-            return view('siswa.edit', compact('siswa'));
-        }
+        // kodingan elu
+        // $siswa->nomor_telepon = $siswa->telepon->nomor_telepon;
+        /*
+        * salahnya kodingan lu lu cari object, sementara gak ada parameternya
+        */
 
+        /*
+        * harusnya yang lu pasing oject aja
+        * lu ambil id dari url 
+        * gua nambah $id di params method
+        * nama model atau class pake hurus depan kapital onyon
+        */
+        return view('siswa.edit', compact('siswa'));
     }
 
     /**
@@ -126,13 +135,31 @@ class SiswaController extends Controller
             $input['foto'] = $this->uploadFoto($request);
             }
 
-
-
         $siswa->update($input);
+        if ($input['nomor_telepon']!=null) {
+            // cek kalo di db gak ada id siswa
+            if ($siswa->telepon != null) {
+                Telepon::where('id_siswa',$siswa->id)->update(['nomor_telepon'  =>  $input['nomor_telepon']]);
+            } else {
+                Telepon::create([
+                        'id_siswa'  =>  $siswa->id,
+                        'nomor_telepon'  =>  $input['nomor_telepon'],
+                    ]);
+            }
+        } else {
+            // kalo input no telepon kososng
+            if ($siswa->telepon != null) {
+                // cek kalo siswa udah ada nomor telepon di db, tapi dia input nya kosong,
+                // kita hapus relasinya
+                Telepon::where('id_siswa',$siswa->id)->delete();
+            }
+        }
 
-        $telepon = $siswa->telepon;
-        $telepon->nomor_telepon = $input('nomor_telepon');
-        $siswa->telepon()->save($telepon);
+        // $telepon->nomor_telepon = $input('nomor_telepon');
+        // $input itu array bukan function
+        // $telepon = $siswa->telepon;
+        // $telepon->nomor_telepon = $input['nomor_telepon'];
+        // $siswa->telepon()->save($telepon);
 
         $siswa->hobi()->sync($request->input('hobi_siswa'));
         
@@ -142,8 +169,10 @@ class SiswaController extends Controller
     private function uploadFoto(SiswaRequest $request) {
         $foto = $request->file('foto');
         $ext = $foto->getClientOriginalExtension();
-
-        if ($request->file('foto')->isValid) {
+        // $isValid apaan ? gak jelas jadi gua hapus. Kalo gak mau kosong pake validator
+        // penamaan lebih baik pake unix timestamp = time();
+        // kalo gak pake package image intervention
+        if ($request->file('foto')) {
             $foto_name = date('YmdHis'). ".$ext";
             $upload_path = 'fotoupload';
             $request->file('foto')->move($upload_path, $foto_name);

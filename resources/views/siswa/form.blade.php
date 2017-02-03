@@ -59,7 +59,7 @@
 				<div class="form-group">
 			@endif
 				{!! Form::label('nomor_telepon', 'Telepon:', ['class'=>'control-label']) !!}
-				{!! Form::text('nomor_telepon', null, ['class'=>'form-control']) !!}
+				{!! Form::text('nomor_telepon', !empty($siswa->telepon->nomor_telepon) ? $siswa->telepon->nomor_telepon : null, ['class'=>'form-control']) !!}
 				@if ($errors->has('nomor_telepon'))
 					<span class="help-blocka">{{ $errors->first('nomor_telepon') }} </span>
 				@endif

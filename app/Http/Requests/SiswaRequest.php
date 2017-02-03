@@ -27,8 +27,7 @@ class SiswaRequest extends Request
         if ($this->method() == 'PATCH') {
             $nisn_rules = 'required|string|size:4|unique:siswa,nisn,' . $this->get('id');
             $telepon_rules = 'sometimes|numeric|digits_between:10,15|unique:telepon,nomor_telepon,' . $this->get('id') . ',id_siswa';
-            }
-        }else{
+            } else {
             $nisn_rules = 'required|string|size:4|unique:siswa,nisn';
             $telepon_rules = 'sometimes|numeric|digits_between:10,15|unique:telepon,nomor_telepon';
         }
