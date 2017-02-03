@@ -101,10 +101,6 @@ class SiswaController extends Controller
     public function edit(siswa $siswa)
     {
         $siswa->nomor_telepon = $siswa->telepon->nomor_telepon;
-        if ($siswa->nomor_telepon == null){
-            $siswa->nomor_telepon == "Tidak ada";
-        return view('siswa.edit', compact('siswa'));
-        }else{
             return view('siswa.edit', compact('siswa'));
         }
 

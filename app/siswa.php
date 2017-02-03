@@ -3,7 +3,7 @@
 namespace App;
 
 use Illuminate\Database\Eloquent\Model;
-
+use App\Telepon;
 class siswa extends Model
 {
     protected $table = 'siswa';
@@ -22,8 +22,8 @@ class siswa extends Model
     	return ucwords($nama_siswa);
     }
 
-    public function telepon() {
-        return $this->hasOne('App\Telepon', 'id_siswa');
+    public function telepon(){
+            return $this->hasOne('App\Telepon', 'id_siswa');
     }
 
     public function kelas() {
